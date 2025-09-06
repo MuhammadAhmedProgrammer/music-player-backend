@@ -22,6 +22,11 @@ const __dirname = path.dirname(__filename);
 // Songs folder (inside public/songs)
 const songsDir = path.join(__dirname, "public", "songs");
 
+// Root route (for Railway health check + easy testing)
+app.get("/", (req, res) => {
+  res.send("🚀 Backend is running!");
+});
+
 // API route: list folders and files
 app.get("/api/songs", (req, res) => {
   try {
@@ -45,10 +50,9 @@ app.get("/api/songs", (req, res) => {
   }
 });
 
-// Serve static files (mp3s, images, json, etc.)
+// Serve static files (mp3s, images, etc.)
 app.use("/songs", express.static(songsDir));
 
 app.listen(PORT, () => {
   console.log(`🎶 Server running on port ${PORT}`);
-  console.log(`➡️ Open in browser: https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`);
 });
