@@ -7,21 +7,22 @@ import { fileURLToPath } from "url";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Enable CORS
+// Enable CORS (you can later restrict to your frontend domain)
+const allowedOrigin = process.env.ALLOWED_ORIGIN || "*";
 app.use(cors({
-  origin: "*",  // only allow your React app
+  origin: allowedOrigin,
   methods: ["GET", "POST"],
   allowedHeaders: ["Content-Type"],
 }));
 
-// Get dirname (because ES Modules don’t have __dirname)
+// ES modules fix
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Songs folder (inside public/songs)
-const songsDir = path.join(__dirname, "public/songs");
+// Songs folder (inside backend/public/songs)
+const songsDir = path.join(__dirname, "public", "songs");
 
-// API route to get folders and files
+// API route: list folders and files
 app.get("/api/songs", (req, res) => {
   try {
     const folders = fs.readdirSync(songsDir);
@@ -31,7 +32,6 @@ app.get("/api/songs", (req, res) => {
       const stats = fs.statSync(folderPath);
 
       if (stats.isDirectory()) {
-        // ✅ include ALL files now
         const files = fs.readdirSync(folderPath);
         return { folder, files };
       }
@@ -45,7 +45,7 @@ app.get("/api/songs", (req, res) => {
   }
 });
 
-// Serve static files (so you can play the actual mp3s, and access images/json too)
+// Serve static files (mp3s, images, json, etc.)
 app.use("/songs", express.static(songsDir));
 
 app.listen(PORT, () => {
