@@ -19,7 +19,7 @@ app.use(cors({
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Songs folder (inside backend/public/songs)
+// Songs folder (inside public/songs)
 const songsDir = path.join(__dirname, "public", "songs");
 
 // API route: list folders and files
@@ -49,5 +49,6 @@ app.get("/api/songs", (req, res) => {
 app.use("/songs", express.static(songsDir));
 
 app.listen(PORT, () => {
-  console.log(`🎶 Server running at http://localhost:${PORT}`);
+  console.log(`🎶 Server running on port ${PORT}`);
+  console.log(`➡️ Open in browser: https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`);
 });
